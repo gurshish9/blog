@@ -22,28 +22,34 @@
 {% endif %}
 
 <hr>
-<a href="{% url 'add_comment_to_post' pk=post.pk %}" class="btn btn-primary btn-comment">Add Comment</a>
-
-<div class="container">
+ 
+<div class="container mt-4">
+    <div class="mt-3 text-end">
+        <a href="{% url 'add_comment_to_post' pk=post.pk %}" class="btn btn-success">Add Comment</a>
+    </div>
+ 
     {% for comment in post.comments.all %}
-    <br>
-    {% if user.is_authenticated or comment.approved_comment %}
-    {{comment.created_date}}
-    {% if not comment.approved_comment %}
-    <a href="{% url 'comment_remove' pk=comment.pk %}" class="btn btn-primary">
-        <i class="bi bi-trash"></i>
-    </a>
-    <a href="{% url 'comment_approve' pk=comment.pk %}" class="btn btn-primary">
-        <i class="bi bi-check-lg"></i>
-    </a>
-    {% endif %}
-    <p>{{comment.text|safe|linebreaks}}</p>
-    <p>Posted By: {{comment.author}}</p>
-
-    {% endif %}
+        {% if user.is_authenticated or comment.approved_comment %}
+            <div class="mb-3">
+                <p><strong>{{ comment.created_date }}</strong></p>
+                <p>{{ comment.text|safe|linebreaks }}</p>
+                <p>Posted By: {{ comment.author }}</p>
+ 
+                {% if not comment.approved_comment %}
+                    <a href="{% url 'comment_remove' pk=comment.pk %}" class="btn btn-sm btn-danger">
+                        <i class="bi bi-trash"></i>
+                    </a>
+                    <a href="{% url 'comment_approve' pk=comment.pk %}" class="btn btn-sm btn-success">
+                        <i class="bi bi-check-lg"></i>
+                    </a>
+                {% endif %}
+            </div>
+        {% endif %}
     {% empty %}
-    <p>No Comments</p>
+        <p>No Comments</p>
     {% endfor %}
+ 
+ 
 </div>
 
 {% endblock %}
